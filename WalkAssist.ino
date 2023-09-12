@@ -9,14 +9,15 @@ int in4 = 4;
 // Motor strength
 int ratio = 200 / 35;
 #include <NewPing.h>
-#define TRIGGER_PIN 12
-#define ECHO_PIN 11
-#define TRIGGER_PIN_L1 6
+#define TRIGGER_PIN 11
+#define TRIG_PIN_12 12
+#define TRIG_PIN_2 2
 // #define ECHO_PIN_L1 10
 #define MAX_DISTANCE 400
-NewPing sonar_R1(ECHO_PIN, ECHO_PIN, MAX_DISTANCE);
+NewPing sonar_P12(TRIG_PIN_12, TRIG_PIN_12, MAX_DISTANCE);
 // NewPing sonar_L1(TRIGGER_PIN_L1, ECHO_PIN_L1, MAX_DISTANCE);
-NewPing sonar_L1(TRIGGER_PIN_L1, TRIGGER_PIN_L1, MAX_DISTANCE);
+NewPing sonar_P2(TRIG_PIN_2, TRIG_PIN_2, MAX_DISTANCE);
+NewPing sonar_P6(6, 6, MAX_DISTANCE);
 float tempval1;
 float tempval2;
 int finalval;
@@ -38,10 +39,12 @@ void setup()
 }
 void loop()
 {
-    delay(100);
-    Serial.print("Ping L1: ");
+    delay(500);
+    Serial.print("Ping P2: ");
     int iterations = 2;
-    tempval1 = ((sonar_L1.ping_median(iterations) / 2) * 0.0343);
+    tempval1 = 0;
+    tempval2 = 0;
+    tempval1 = ((sonar_P2.ping_median(iterations) / 2) * 0.0343);
     if (tempval1 > 60)
     {
         tempval1 = 60;
@@ -69,9 +72,12 @@ void loop()
         Serial.println("Off");
         motorOn_L(0);
     }
-    Serial.print("Ping R1: ");
+
+    Serial.print("Ping P12: ");
     iterations = 2;
-    tempval1 = ((sonar_R1.ping_median(iterations) / 2) * 0.0343);
+    tempval1 = 0;
+    tempval2 = 0;
+    tempval1 = ((sonar_P12.ping_median(iterations) / 2) * 0.0343);
     if (tempval1 > 60)
     {
         tempval1 = 60;
@@ -99,6 +105,28 @@ void loop()
         Serial.println("Off");
         motorOn_R(0);
     }
+
+    Serial.print("Ping P6: ");
+    iterations = 2;
+    tempval1 = 0;
+    tempval2 = 0;
+    tempval1 = ((sonar_P6.ping_median(iterations) / 2) * 0.0343);
+    if (tempval1 > 60)
+    {
+        tempval1 = 60;
+    }
+    if (tempval1 - tempval2 > 60 || tempval1 - tempval2 < -60)
+    {
+        tempval2 = (tempval1 * 0.02) + (tempval2 * 0.98);
+    }
+    else
+    {
+        tempval2 = (tempval1 * 0.4) + (tempval2 * 0.6);
+    }
+    finalval = tempval2;
+    // finalval = sonar.ping(MAX_DISTANCE) * 0.0343 / 2;
+    Serial.print(finalval);
+    Serial.println("cm");
 }
 void motorOn_L(int strength)
 {

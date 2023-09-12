@@ -2,5 +2,6 @@
     "configuration": "cpu=atmega328old",
     "board": "arduino:avr:nano",
     "programmer": "avrisp",
-    "sketch": "WalkAssist.ino"
+    "sketch": "WalkAssist.ino",
+    "port": "/dev/tty.usbserial-10"
 }
