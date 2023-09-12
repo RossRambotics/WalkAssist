@@ -18,6 +18,7 @@ NewPing sonar_P12(TRIG_PIN_12, TRIG_PIN_12, MAX_DISTANCE);
 // NewPing sonar_L1(TRIGGER_PIN_L1, ECHO_PIN_L1, MAX_DISTANCE);
 NewPing sonar_P2(TRIG_PIN_2, TRIG_PIN_2, MAX_DISTANCE);
 NewPing sonar_P6(6, 6, MAX_DISTANCE);
+NewPing sonar_P11(11, 11, MAX_DISTANCE);
 float tempval1;
 float tempval2;
 int finalval;
@@ -111,6 +112,28 @@ void loop()
     tempval1 = 0;
     tempval2 = 0;
     tempval1 = ((sonar_P6.ping_median(iterations) / 2) * 0.0343);
+    if (tempval1 > 60)
+    {
+        tempval1 = 60;
+    }
+    if (tempval1 - tempval2 > 60 || tempval1 - tempval2 < -60)
+    {
+        tempval2 = (tempval1 * 0.02) + (tempval2 * 0.98);
+    }
+    else
+    {
+        tempval2 = (tempval1 * 0.4) + (tempval2 * 0.6);
+    }
+    finalval = tempval2;
+    // finalval = sonar.ping(MAX_DISTANCE) * 0.0343 / 2;
+    Serial.print(finalval);
+    Serial.println("cm");
+
+    Serial.print("Ping P11: ");
+    iterations = 2;
+    tempval1 = 0;
+    tempval2 = 0;
+    tempval1 = ((sonar_P11.ping_median(iterations) / 2) * 0.0343);
     if (tempval1 > 60)
     {
         tempval1 = 60;
